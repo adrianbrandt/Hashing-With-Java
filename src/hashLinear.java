@@ -70,6 +70,7 @@ public class hashLinear
 
         // Lineær probing
         int neste = h;
+        System.out.println(hashTabell[0]);
 
         while (hashTabell[neste] != null)
         {
@@ -180,7 +181,7 @@ public class hashLinear
         System.out.printf( "Load factor : %5.3f\n",  hL.loadFactor());
         System.out.println("Probes      : " + hL.antProbes());
 
-        /*
+/*
         for (int i =0; i<hashLengde; i++) {
             if (hL.hashTabell[i] != null)
                 System.out.println(hL.hashTabell[i] + " Hash: " + hL.hashTabell[i].hashCode() + " Index: "
@@ -189,9 +190,10 @@ public class hashLinear
                 System.out.println(hL.hashTabell[i]);
         }
 
-         */
 
-        /*
+
+
+
         // Et par enkle søk
         String S = "\nVolkswagen Karmann Ghia";
         if (hL.search(S))
