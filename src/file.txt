@@ -1,7 +1,7 @@
-alot of string in here "some of us aint tho"
-Il Tempo Gigante
-"Il Tempo Gigante" 2
-"Il Tempo Gigante" finnes ikke i hashtabellen
-'Il Tempo Gigante'
-Volkswagen Karmann Ghia
-"Volkswagen Karmann Ghia"
+potet1
+potet2
+potet3
+potet4
+potet5
+potet6
+potet7
