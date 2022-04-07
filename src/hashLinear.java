@@ -69,21 +69,21 @@ public class hashLinear
 
         // LineÃ¦r probing
         int neste = h;
-        int next = h +1;
-        String wait = hashTabell[h];
+
+        String wait = hashTabell[neste];
+        hashTabell[neste] = S;
 
 
         while (hashTabell[neste] != null)
         {
             // Ny probe
             antProbes++;
-
             // Denne indeksen er opptatt, prÃ¸ver neste
-           // hashTabell[next] = hashTabell[neste]
-
-            hashTabell[neste] = S;
-            S = wait;
             neste++;
+
+            S = wait;
+            wait = hashTabell[neste];
+            hashTabell[neste]= S;
 
 
 
