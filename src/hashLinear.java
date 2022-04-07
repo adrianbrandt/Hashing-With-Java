@@ -62,8 +62,7 @@ public class hashLinear
     // Innsetting av tekststreng med lineÃ¦r probing
     // Avbryter med feilmelding hvis ledig plass ikke finnes
     //
-    void insert(String S)
-    {
+    void insert(String S) {
         // Beregner hashverdien
         int h = hash(S);
 
@@ -74,16 +73,17 @@ public class hashLinear
         hashTabell[neste] = S;
 
 
-        while (hashTabell[neste] != null)
-        {
+        while (wait != null) {
             // Ny probe
             antProbes++;
-            // Denne indeksen er opptatt, prÃ¸ver neste
+            // PrÃ¸ver neste mulige
             neste++;
 
             S = wait;
             wait = hashTabell[neste];
-            hashTabell[neste]= S;
+            hashTabell[neste] = S;
+
+
 
 
 

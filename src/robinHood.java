@@ -62,21 +62,36 @@ public class robinHood
     // Innsetting av tekststreng med lineÃ¦r probing
     // Avbryter med feilmelding hvis ledig plass ikke finnes
     //
-    void insert(String S)
-    {
+    void insert(String S) {
         // Beregner hashverdien
         int h = hash(S);
 
         // LineÃ¦r probing
         int neste = h;
 
-        while (hashTabell[neste] != null)
-        {
+        String T = hashTabell[neste];
+        hashTabell[neste] = S;
+        String wait = T;
+
+
+        while (T != null) {
             // Ny probe
             antProbes++;
-
-            // Denne indeksen er opptatt, prÃ¸ver neste
+            // PrÃ¸ver neste mulige
             neste++;
+
+            if (h > neste && neste != h){
+                S = T;
+                T = hashTabell[neste];
+                hashTabell[neste] = S;
+
+            }
+            System.out.println(hash(T) + "T   |    S " + hash(S) + " Probes : " + antProbes + " h " + h);
+
+
+
+
+
 
             // Wrap-around
             if (neste >= hashLengde)
@@ -179,10 +194,14 @@ public class robinHood
         System.out.printf( "Load factor : %5.3f\n",  hL.loadFactor());
         System.out.println("Probes      : " + hL.antProbes());
 
+        System.out.println("\n RESULT: ");
         for (int i =0; i<hashLengde; i++) {
             if (hL.hashTabell[i] != null)
-                System.out.println(hL.hashTabell[i] + " Index: "
-                        + hL.hash(hL.hashTabell[i]));
+                System.out.println("Index: "
+                        +i+ "|  Real index: " + hL.hash(hL.hashTabell[i]) + " Word:     " + hL.hashTabell[i]
+                        + "     Hash: " + hL.hashTabell[i].hashCode());
+            else if (hL.hashTabell[i] == null)
+                System.out.println(hL.hashTabell[i] + " index: " +i);
 
         }
 /*
