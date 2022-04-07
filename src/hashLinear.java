@@ -15,7 +15,7 @@ public class hashLinear
     private int hashLengde;
 
     // Hashtabell
-    private String hashTabell[];
+    private String[] hashTabell;
 
     // Antall elementer lagret i tabellen
     private int n;
@@ -156,7 +156,7 @@ public class hashLinear
     //
     // * Tester om sÃ¸k fungerer for et par konstante verdier
     //
-    public static void main(String argv[]) throws FileNotFoundException {
+    public static void main(String[] argv) throws FileNotFoundException {
         // Hashlengde leses fra kommandolinjen
         int hashLengde = 0;
         File file = new File("src/file.txt");
