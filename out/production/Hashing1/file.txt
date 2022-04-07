@@ -1,7 +1,7 @@
-potet11
-potet12
-potet13
-potet14
-potet15
-potet16
-potet17
+linje11
+linje22
+linje33
+linje44
+linje55
+linje66
+linje77

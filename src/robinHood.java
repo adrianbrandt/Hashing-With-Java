@@ -9,7 +9,7 @@ import java.util.Scanner;
 // - Ingen rehashing ved full tabell
 // - Tilbyr bare innsetting og sÃ¸king
 //
-public class hashLinear
+public class robinHood
 {
     // Hashlengde
     private int hashLengde;
@@ -26,7 +26,7 @@ public class hashLinear
     // KonstruktÃ¸r
     // Sjekker ikke for fornuftig verdi av hashlengden
     //
-    public hashLinear(int lengde)
+    public robinHood(int lengde)
     {
         hashLengde = lengde;
         hashTabell = new String[lengde];
@@ -69,9 +69,6 @@ public class hashLinear
 
         // LineÃ¦r probing
         int neste = h;
-        int next = h +1;
-        String wait = hashTabell[h];
-
 
         while (hashTabell[neste] != null)
         {
@@ -79,19 +76,11 @@ public class hashLinear
             antProbes++;
 
             // Denne indeksen er opptatt, prÃ¸ver neste
-           // hashTabell[next] = hashTabell[neste]
-
-            hashTabell[neste] = S;
-            S = wait;
             neste++;
 
-
-
             // Wrap-around
-            if (neste >= hashLengde){
+            if (neste >= hashLengde)
                 neste = 0;
-
-            }
 
             // Hvis vi er kommet tilbake til opprinnelig hashverdi, er
             // tabellen full og vi gir opp (her ville man normalt
@@ -103,9 +92,8 @@ public class hashLinear
             }
         }
 
-            // Lagrer tekststrengen pÃ¥ funnet indeks
+        // Lagrer tekststrengen pÃ¥ funnet indeks
         hashTabell[neste] = S;
-
 
         // Ã˜ker antall elementer som er lagret
         n++;
@@ -176,7 +164,7 @@ public class hashLinear
         }
 
         // Lager ny hashTabell
-        hashLinear hL = new hashLinear(hashLengde);
+        robinHood hL = new robinHood(hashLengde);
 
         // Leser input og hasher alle linjer
         while (input.hasNext())
@@ -194,12 +182,9 @@ public class hashLinear
         for (int i =0; i<hashLengde; i++) {
             if (hL.hashTabell[i] != null)
                 System.out.println(hL.hashTabell[i] + " Index: "
-                        +i+ "! Real index: " + hL.hash(hL.hashTabell[i])+ " hashcode: " + hL.hashTabell[i].hashCode());
-            else if (hL.hashTabell[i] == null)
-                System.out.println(hL.hashTabell[i] + " index: " +i);
+                        + hL.hash(hL.hashTabell[i]));
 
         }
-
 /*
         // Et par enkle sÃ¸k
         String S = "Volkswagen Karmann Ghia";
@@ -211,3 +196,4 @@ public class hashLinear
 */
     }
 }
+
