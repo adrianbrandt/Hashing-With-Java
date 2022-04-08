@@ -15,7 +15,7 @@ public class robinHood
     private int hashLengde;
 
     // Hashtabell
-    private String hashTabell[];
+    private String[] hashTabell;
 
     // Antall elementer lagret i tabellen
     private int n;
@@ -80,16 +80,11 @@ public class robinHood
             // PrÃ¸ver neste mulige
             neste++;
 
-            if (h > neste && neste != h){
+            if (hashTabell[h] != null){
                 S = T;
                 T = hashTabell[neste];
                 hashTabell[neste] = S;
-
             }
-            System.out.println(hash(T) + "T   |    S " + hash(S) + " Probes : " + antProbes + " h " + h);
-
-
-
 
 
 
@@ -159,7 +154,7 @@ public class robinHood
     //
     // * Tester om sÃ¸k fungerer for et par konstante verdier
     //
-    public static void main(String argv[]) throws FileNotFoundException {
+    public static void main(String[] argv) throws FileNotFoundException {
         // Hashlengde leses fra kommandolinjen
         int hashLengde = 0;
         File file = new File("src/file.txt");
