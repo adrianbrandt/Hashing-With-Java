@@ -69,6 +69,7 @@ public class hashLinear
         // LineÃ¦r probing
         int neste = h;
 
+        //Sets waiter
         String wait = hashTabell[neste];
         hashTabell[neste] = S;
 
@@ -79,6 +80,7 @@ public class hashLinear
             // PrÃ¸ver neste mulige
             neste++;
 
+            //performes the switch
             S = wait;
             wait = hashTabell[neste];
             hashTabell[neste] = S;
