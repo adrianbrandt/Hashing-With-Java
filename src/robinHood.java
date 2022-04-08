@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 // Hashing av tekststrenger med lineÃ¦r probing
@@ -59,34 +60,38 @@ public class robinHood
         return h % hashLengde;
     }
 
-    // Innsetting av tekststreng med lineÃ¦r probing
-    // Avbryter med feilmelding hvis ledig plass ikke finnes
-    //
+
+    //Insert method for robin hood hashing
     void insert(String S) {
+
         // Beregner hashverdien
         int h = hash(S);
 
         // LineÃ¦r probing
         int neste = h;
 
+        //Inserting String where table is null
         String T = hashTabell[neste];
-        hashTabell[neste] = S;
-        String wait = T;
+        if (T == null) {
+            hashTabell[neste] = S;
+        }
 
-
+        //While loop where table is not null
         while (T != null) {
             // Ny probe
             antProbes++;
-            // PrÃ¸ver neste mulige
-            neste++;
 
-            if (hashTabell[h] != null){
+            //Checks if the object´s index equals string
+            if (Objects.equals(hashTabell[neste], S)) {
                 S = T;
-                T = hashTabell[neste];
-                hashTabell[neste] = S;
             }
 
+            neste++;
 
+            T = hashTabell[neste];
+
+            // Denne indeksen er opptatt, prÃ¸ver neste
+            neste++;
 
             // Wrap-around
             if (neste >= hashLengde)
@@ -95,19 +100,17 @@ public class robinHood
             // Hvis vi er kommet tilbake til opprinnelig hashverdi, er
             // tabellen full og vi gir opp (her ville man normalt
             // doblet lengden pÃ¥ hashtabellen og gjort en rehashing)
-            if (neste == h)
-            {
+            if (neste == h) {
                 System.err.println("\nHashtabell full, avbryter");
                 System.exit(0);
             }
         }
 
-        // Lagrer tekststrengen pÃ¥ funnet indeks
-        hashTabell[neste] = S;
 
         // Ã˜ker antall elementer som er lagret
         n++;
     }
+
 
     // SÃ¸king etter tekststreng med lineÃ¦r probing
     // Returnerer true hvis strengen er lagret, false ellers
