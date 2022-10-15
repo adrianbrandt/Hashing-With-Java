@@ -2,119 +2,111 @@ import java.io.*;
 import java.util.Objects;
 import java.util.Scanner;
 
-// Hashing av tekststrenger med lineÃ¦r probing
-// Bruker Javas innebygde hashfunksjon for strenger
-//
-// Enkel og begrenset implementasjon:
-//
-// - Ingen rehashing ved full tabell
-// - Tilbyr bare innsetting og sÃ¸king
-//
-public class robinHood
-{
-    // Hashlengde
-    private int hashLengde;
+/*
+Hashing Strings Robin Hood With Linear Probing
 
-    // Hashtabell
-    private String[] hashTabell;
+- No Re Hashing When Table Full
+- No Searching, Only Insertion
+ */
+public class robinHood {
+    // Hash Length
+    private int hashLength;
 
-    // Antall elementer lagret i tabellen
+    // Hash Table
+    private String[] hashTable;
+
+    // Number of Elements to be Stored
     private int n;
 
-    // Antall probes ved innsetting
-    private int antProbes;
+    // Number of Probes
+    private int nProbes;
 
-    // KonstruktÃ¸r
-    // Sjekker ikke for fornuftig verdi av hashlengden
-    //
-    public robinHood(int lengde)
-    {
-        hashLengde = lengde;
-        hashTabell = new String[lengde];
+    // Constructor
+    public robinHood(int lengde) {
+        hashLength = lengde;
+        hashTable = new String[lengde];
         n = 0;
-        antProbes = 0;
+        nProbes = 0;
     }
 
-    // Returnerer load factor
-    public float loadFactor()
-    {
-        return ((float) n)/hashLengde;
+    // Returns Load Factor
+    public float loadFactor() {
+        return ((float) n)/ hashLength;
     }
 
-    // Returnerer antall data i tabellen
-    public int antData()
-    {
+    // Returns Number of Data in Table
+    public int nData() {
         return n;
     }
 
-    // Returnerer antall probes ved innsetting
-    public int antProbes()
-    {
-        return antProbes;
+    // Returns Number of Probes
+    public int nProbes() {
+        return nProbes;
     }
 
-    // Hashfunksjon
-    int hash(String S)
-    {
+    // Hash Function
+    int hash(String S) {
         int h = Math.abs(S.hashCode());
-        return h % hashLengde;
+        return h % hashLength;
     }
 
 
-    //Insert method for robin hood hashing
+    //Insert Method for Robin Hood Hashing
     void insert(String S) {
 
-        // Beregner hashverdien
+        // Calculate Hash Value
         int h = hash(S);
 
-        // LineÃ¦r probing
-        int neste = h;
+        // Linear Probing
+        int next = h;
 
-        //Inserting String where table is null
-        String T = hashTabell[neste];
+        // Inserting String Where Table is null
+        String T = hashTable[next];
         if (T == null) {
-            hashTabell[neste] = S;
+            hashTable[next] = S;
         }
 
-        //While loop where table is not null
+        // While Loop Where Table is Not null
         while (T != null) {
             // Ny probe
-            antProbes++;
+            nProbes++;
 
-            //Checks if the object´s index equals string
-            if (Objects.equals(hashTabell[neste], S)) {
+            //Checks if the Object´s Index Equals String
+            if (Objects.equals(hashTable[next], S)) {
                 S = T;
             }
+            next++;
 
-            neste++;
+            T = hashTable[next];
 
-            T = hashTabell[neste];
+            // Index Taken, Trying Next
+            next++;
 
-            // Denne indeksen er opptatt, prÃ¸ver neste
-            neste++;
+            // Wrap-Around
+            if (next >= hashLength)
+                next = 0;
 
-            // Wrap-around
-            if (neste >= hashLengde)
-                neste = 0;
-
-            // Hvis vi er kommet tilbake til opprinnelig hashverdi, er
-            // tabellen full og vi gir opp (her ville man normalt
-            // doblet lengden pÃ¥ hashtabellen og gjort en rehashing)
-            if (neste == h) {
+            /*
+            When We have Wraped Around and Reached First Hash Value, The Table is Full And We Are Stooping
+            Normally We Would Double the Length for the HashTable and Done Re Hashing Here
+             */
+            if (next == h) {
                 System.err.println("\nHashtabell full, avbryter");
                 System.exit(0);
             }
         }
 
-
-        // Ã˜ker antall elementer som er lagret
+        // Increasing Number of Elements Stored
         n++;
     }
 
 
-    // SÃ¸king etter tekststreng med lineÃ¦r probing
-    // Returnerer true hvis strengen er lagret, false ellers
-    //
+    /*
+     Searching for Strings Using Linear Probing
+     Returning True if String is Stored
+     Returning False if String is Not Stored
+     Not Used in Current Program
+     */
     boolean search(String S)
     {
         // Beregner hashverdien
@@ -123,52 +115,46 @@ public class robinHood
         // LineÃ¦r probing
         int neste = h;
 
-        while (hashTabell[neste] != null)
+        while (hashTable[neste] != null)
         {
-            // Har vi funnet tekststrengen?
-            if (hashTabell[neste].compareTo(S) == 0)
+            // Calculates Hash value
+            if (hashTable[neste].compareTo(S) == 0)
                 return true;
 
-            // PrÃ¸ver neste mulige
+            // Tries Next Possible
             neste++;
 
-            // Wrap-around
-            if (neste >= hashLengde)
+            // Wrap-Around
+            if (neste >= hashLength)
                 neste = 0;
 
-            // Hvis vi er kommet tilbake til opprinnelig hashverdi,
-            // finnes ikke strengen i tabellen
+            //We Have Wrapped Around Meaning the String Does Not Exist in Current Table
             if (neste == h)
                 return false;
         }
 
-        // Finner ikke strengen, har kommet til en probe som er null
+        // String Could Not Be Found, Reached Probe NULL
         return false;
     }
 
-    // Enkelt testprogram:
-    //
-    // * Hashlengde gis som input pÃ¥ kommandolinjen
-    //
-    // * Leser tekststrenger linje for linje fra standard input
-    //   og lagrer dem i hashtabellen
-    //
-    // * Skriver ut litt statistikk etter innsetting
-    //
-    // * Tester om sÃ¸k fungerer for et par konstante verdier
-    //
-    public static void main(String[] argv) throws FileNotFoundException {
-        // Hashlengde leses fra kommandolinjen
+    /*
+    Simple Program:
+    - Hash Length is Given as argument
+    - Reads Strings Line for Line From Input
+    - Displays Some Statistics After Insertion
+     */
+    public static void main(String fileName,String[] argv) throws FileNotFoundException {
+        // Hash Length Given as Argument
         int hashLengde = 0;
-        File file = new File("src/file.txt");
+        File file = new File(fileName);
         Scanner input = new Scanner(file);
         try
         {
             if (argv.length != 1)
-                throw new IOException("Feil: Hashlengde mÃ¥ angis");
+                throw new IOException("Error: Hash Length Must be Given");
             hashLengde = Integer.parseInt(argv[0]);
             if (hashLengde < 1 )
-                throw new IOException("Feil: Hashlengde mÃ¥ vÃ¦re stÃ¸rre enn 0");
+                throw new IOException("Error: Hash Length Must be Larger Then 0");
         }
         catch (Exception e)
         {
@@ -176,41 +162,29 @@ public class robinHood
             System.exit(1);
         }
 
-        // Lager ny hashTabell
+        // Creates New Hash Table
         robinHood hL = new robinHood(hashLengde);
 
-        // Leser input og hasher alle linjer
-        while (input.hasNext())
-        {
+        // Reads Input and Performs Hashing on All Lines
+        while (input.hasNext()) {
             hL.insert(input.nextLine());
         }
 
-        // Skriver ut hashlengde, antall data lest, antall kollisjoner
-        // og load factor
-        System.out.println("Hashlengde  : " + hashLengde);
-        System.out.println("Elementer   : " + hL.antData());
-        System.out.printf( "Load factor : %5.3f\n",  hL.loadFactor());
-        System.out.println("Probes      : " + hL.antProbes());
+        // Writes Out HashLength, Number of Data Read, Number of Collisions and Load Factor.
+        System.out.println("Hash Length  : " + hashLengde);
+        System.out.println("Elements   : " + hL.nData());
+        System.out.printf( "Load Factor : %5.3f\n",  hL.loadFactor());
+        System.out.println("Probes      : " + hL.nProbes());
 
         System.out.println("\n RESULT: ");
         for (int i =0; i<hashLengde; i++) {
-            if (hL.hashTabell[i] != null)
-                System.out.println("Index: "
-                        +i+ "|  Real index: " + hL.hash(hL.hashTabell[i]) + " Word:     " + hL.hashTabell[i]
-                        + "     Hash: " + hL.hashTabell[i].hashCode());
-            else if (hL.hashTabell[i] == null)
-                System.out.println(hL.hashTabell[i] + " index: " +i);
+            if (hL.hashTable[i] != null)
+                System.out.println(hL.hashTable[i] + "-> \tIndex:\t"
+                        +i+ "\tReal index:\t" + hL.hash(hL.hashTable[i])+ "\tHashcode:\t" + hL.hashTable[i].hashCode());
+            else if (hL.hashTable[i] == null)
+                System.out.println(hL.hashTable[i] + "-> \tIndex: " +i);
 
         }
-/*
-        // Et par enkle sÃ¸k
-        String S = "Volkswagen Karmann Ghia";
-        if (hL.search(S))
-            System.out.println("\"" + S + "\"" + " finnes i hashtabellen");
-        S = "Il Tempo Gigante";
-        if (!hL.search(S))
-            System.out.println("\"" + S + "\"" + " finnes ikke i hashtabellen");
-*/
     }
 }
 

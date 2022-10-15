@@ -1,206 +1,192 @@
 import java.io.*;
-import java.util.Locale;
 import java.util.Scanner;
 
-// Hashing av tekststrenger med kjeding i lenket liste
-// Bruker Javas innebygde hashfunksjon for strenger
-//
-// Enkel og begrenset implementasjon:
-//
-// - Ingen rehashing ved full tabell/lange lister
-// - Tilbyr bare innsetting og sÃ¸king
-//
 public class hashChained {
-    // Indre klasse:
-    // Node med data, kjedes sammen i lenkede lister
-    //
+    /*
+    Inner Class-
+    Node Containing Data, Chained Together with Linked Lists
+    */
     private class hashNode {
-        // Data, en tekststreng
+        // Data "String"
         String data;
-        // Neste node i listen
-        hashNode neste;
+        // Next Node in List
+        hashNode next;
 
-        // KonstruktÃ¸r for listenoder
+        // Constructor for List Nodes
         public hashNode(String S, hashNode hN) {
             data = S;
-            neste = hN;
+            next = hN;
         }
     }
 
-    // Hashlengde
-    private static int hashLengde;
+    // Hash Lenght
+    private static int hashLength;
 
-    // Hashtabell, pekere til lister
-    private static hashNode[] hashTabell;
+    // Hashtable, Pointers to List
+    private static hashNode[] hashTable;
 
-    // Antall elementer lagret i tabellen
+    //Amount of Elements Stored in Tables
     private int n;
 
-    // Antall kollisjoner ved innsetting
-    private int antKollisjoner;
+    //Amount of Collisions During Insertion
+    private int Collisions;
 
-    // KonstruktÃ¸r
-    // Sjekker ikke for fornuftig verdi av hashlengden
-    //
+    // Constructor
     public hashChained(int lengde) {
-        hashLengde = lengde;
-        hashTabell = new hashNode[lengde];
+        hashLength = lengde;
+        hashTable = new hashNode[lengde];
         n = 0;
-        antKollisjoner = 0;
+        Collisions = 0;
     }
 
-    // Returnerer load factor
+    // Returning Load Factor
     public float loadFactor() {
-        return ((float) n) / hashLengde;
+        return ((float) n) / hashLength;
     }
 
-    // Returnerer antall data i tabellen
-    public int antData() {
+    // Returning Data Amount
+    public int nData() {
         return n;
     }
 
-    // Returnerer antall kollisjoner ved innsetting
-    public int antKollisjoner() {
-        return antKollisjoner;
+    // Returning Collision Amount During Insertion
+    public int nCollision() {
+        return Collisions;
     }
 
-    // Hashfunksjon
+    // Hash Function
     static int hash(String S) {
         int h = Math.abs(S.hashCode());
-        return h % hashLengde;
+        return h % hashLength;
     }
 
-    // Innsetting av tekststreng med kjeding
-    //
+    // Inserting Text String with Chaining
     void insert(String S) {
-        // Beregner hashverdien
+        // Calculate Hash Value
         int h = hash(S);
 
-        // Ã˜ker antall elementer som er lagret
+        //increases Number of Elements Stored
         n++;
 
-        // Sjekker om kollisjon
-        if (hashTabell[h] != null)
-            antKollisjoner++;
+        // Checking for Collision
+        if (hashTable[h] != null)
+            Collisions++;
 
-        // Setter inn ny node fÃ¸rst i listen
-        hashTabell[h] = new hashNode(S, hashTabell[h]);
+        // Inserting New Node First in List
+        hashTable[h] = new hashNode(S, hashTable[h]);
     }
 
+    /*
+    Searching for Text String in Hash Table.
+    Returning True if String is Stored. Returning False Else.
+     */
 
-    // SÃ¸king etter tekststreng i hashtabell med kjeding
-    // Returnerer true hvis strengen er lagret, false ellers
-    //
     static boolean search(String S) {
-        // Finner listen som S skal ligge i
-        hashNode hN = hashTabell[hash(S)];
+        // Gets List Where S Should Be in
+        hashNode hN = hashTable[hash(S)];
 
-        // Leter gjennom listen
+        // Looks Trough Current List
         while (hN != null) {
-            // Har vi funnet tekststrengen?
+            // Text String Found?
             if (hN.data.compareTo(S) == 0)
                 return true;
-            // PrÃ¸ver neste
-            hN = hN.neste;
+            // Tries Next
+            hN = hN.next;
         }
-        // Finner ikke strengen, har kommet til slutten av listen
+        // Could Not Find String. End of List
         return false;
     }
 
-    //Removes the node that has been choosen by user
+    //Removes the Node That Has Been Chosen by User
     void  remover(String S) {
         int h = hash(S);
         n++;
-        if (hashTabell[h] != null)
-            hashTabell[h] = null;
+        if (hashTable[h] != null)
+            hashTable[h] = null;
         program(S);
     }
 
     //Main program to search for and delete strings
     void program(String S) {
-        for (int i = 0; i < hashLengde; i++) {
-            if (hashChained.hashTabell[i] != null)
-                System.out.println("Index: "
-                        + i + " Word:     " + hashChained.hashTabell[i].data);
-        }
-        System.out.println("""
-                    
-                    Write the word you want to delete:
-                    write exit to close the program!
-                    """);
-
         Scanner uput = new Scanner(System.in);
-        S = uput.nextLine();
-
-        if (S.toLowerCase().equals("exit"))
-            System.exit(0);
-
-        for (int i = 0; i < hashLengde; i++) {
-            if (hashChained.hashTabell[i] != null)
+        for (int i = 0; i < hashLength; i++) {
+            if (hashChained.hashTable[i] != null)
                 System.out.println("Index: "
-                        + i + " Word:     " + hashChained.hashTabell[i].data
-                        + "     Hash: " + hashChained.hashTabell[i].hashCode());
+                        + i + " \tWord: \"" + hashChained.hashTable[i].data + "\" \tHash: " + hashChained.hashTable[i].hashCode());
         }
+        System.out.println("\nWhat would you like to do?\nOptions: Delete  \tAdd \tExit");
+        String answer = uput.nextLine();
 
-
-        if (hashChained.search(S)) {
-            System.out.println("\"" + S + "\"" + " removed from table\n");
-            remover(S);
-
+        switch (answer.toLowerCase()) {
+            case "delete" -> {
+                System.out.println("Enter Word to Remove");
+                S = uput.nextLine();
+                System.out.println("\n\n\n\n\n");
+                if (hashChained.search(S)) {
+                    System.out.println("\"" + S + "\"" + " Removed From Table\n");
+                    remover(S);
+                }
+                if (!hashChained.search(S)) {
+                    System.out.println("\"" + S + "\"" + " Not Found in Table\n");
+                }
             }
-        program(S);
-
+            case "add" -> {
+                System.out.println("Enter Word to Insert");
+                S = uput.nextLine();
+                insert(S);
+                System.out.println("\n\n\n\n\n");
+                System.out.println("\"" + S + "\"" + " Added to Table\n");
+            }
+            case "exit" -> System.exit(0);
+            default -> {
+                System.out.println("\n\n\n\n\n");
+                System.out.println("\"" + answer + "\"" + " Was not Recognised\n");
+            }
         }
+        System.out.flush();
+        program(S);
+    }
 
-        // Enkelt testprogram:
-        //
-        // * Hashlengde gis som input pÃ¥ kommandolinjen
-        //
-        // * Leser tekststrenger linje for linje fra standard input
-        //   og lagrer dem i hashtabellen
-        //
-        // * Skriver ut litt statistikk etter innsetting
-        //
-        // * Tester om sÃ¸k fungerer for et par konstante verdier
-        //
-        public static void main (String argv[]) throws FileNotFoundException {
-            // Hashlengde leses fra kommandolinjen
-            int hashLengde = 0;
-            File file = new File("src/file.txt");
+        /*
+        Simple Text Program:
+
+        - Hash Length is given as input with arguments
+
+        - Reading Text Strings for Entire Line from Standard Input and Stores Them in Hash Table
+
+        - Outputs Some Statistics After Insertion
+        */
+        public static void main (String fileName, String[] argv) throws FileNotFoundException {
+            // Hash Length Given as Arguments
+            int hashLength = 0;
+            File file = new File(fileName);
             Scanner input = new Scanner(file);
-            Scanner uput = new Scanner(System.in);
             try {
                 if (argv.length != 1)
-                    throw new IOException("Feil: Hashlengde mÃ¥ angis");
-                hashLengde = Integer.parseInt(argv[0]);
-                if (hashLengde < 1)
-                    throw new IOException("Feil: Hashlengde mÃ¥ vÃ¦re stÃ¸rre enn 0");
+                    throw new IOException("Error: Hash Length Must be Given");
+                hashLength = Integer.parseInt(argv[0]);
+                if (hashLength < 1)
+                    throw new IOException("Error: Hash Length Must be Larger Then 0");
             } catch (Exception e) {
                 System.err.println(e);
                 System.exit(1);
             }
 
-            // Lager ny hashTabell
-            hashChained hC = new hashChained(hashLengde);
+            // Creates New HashTable
+            hashChained hC = new hashChained(hashLength);
 
-            // Leser input og hasher alle linjer
+            // Reads Input and Performs Hashing on All Lines
             while (input.hasNext()) {
                 hC.insert(input.nextLine());
             }
 
-
-            // Skriver ut hashlengde, antall data lest, antall kollisjoner
-            // og load factor
-            System.out.println("Hashlengde  : " + hashLengde);
-            System.out.println("Elementer   : " + hC.antData());
-            System.out.printf("Load factor : %5.3f\n", hC.loadFactor());
-            System.out.println("Kollisjoner : " + hC.antKollisjoner() + "\n");
-
-
+            // Writes Out HashLength, Number of Data Read, Number of Collisions and Load Factor.
+            System.out.println("Hash Length  : " + hashLength);
+            System.out.println("Elements   : " + hC.nData());
+            System.out.printf("Load Factor : %5.3f\n", hC.loadFactor());
+            System.out.println("Collisions : " + hC.nCollision() + "\n");
 
             String S = "A";
             hC.remover(S);
-
-
         }
     }
